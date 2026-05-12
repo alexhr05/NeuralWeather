@@ -25,12 +25,13 @@ feature_cols = ["latitude", "longitude", "year",
 X = df[feature_cols].values
 y = df["t2m"].values
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.1, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.05, random_state=42)
 
 model = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(len(feature_cols),)),
-    tf.keras.layers.Dense(64, activation="relu"),
-    tf.keras.layers.Dense(64, activation="relu"),
+    tf.keras.layers.Dense(32, activation="relu"),
+    tf.keras.layers.Dense(32, activation="relu"),
+    tf.keras.layers.Dense(32, activation="relu"),
     
     tf.keras.layers.Dense(1)
 ])
@@ -42,7 +43,7 @@ history = model.fit(
     X_train, y_train,
     validation_split=0.1,
     epochs=2,
-    batch_size=4096,
+    batch_size=1024,
     callbacks=[
         tf.keras.callbacks.EarlyStopping(patience=3, restore_best_weights=True)
     ]
