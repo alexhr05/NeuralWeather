@@ -9,12 +9,10 @@ with open("data/bulgaria/stats.json") as f:
     stats = json.load(f)
 df = pd.read_parquet("data/bulgaria/data.parquet")
 
-
 # feature_cols = ["latitude", "longitude", "year",
 #                 "month_sin", "month_cos",
 #                 "day_sin", "day_cos",
 #                 "hour_sin", "hour_cos"]
-
 
 feature_cols = ["latitude", "longitude", "year",
                 "month_sin", "month_cos",
