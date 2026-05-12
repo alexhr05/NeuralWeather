@@ -9,6 +9,7 @@ app = FastAPI()
 @app.get("/models")
 def get_models():
     models_dir = "models"
+    print("test")
     return [f for f in listdir(models_dir) if isfile(join(models_dir, f))]
 
 
