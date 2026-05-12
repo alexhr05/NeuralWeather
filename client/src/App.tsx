@@ -1,9 +1,9 @@
-import './App.css'
+import BulgariaMap from "./components/BulgariaMap"
 
 function App() {
   return (
-    <div className='bg-red-400'>
-      <p>test</p>
+    <div className="px-30 mt-10">
+      <BulgariaMap />
     </div>
   )
 }
