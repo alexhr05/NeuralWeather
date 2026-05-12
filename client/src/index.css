@@ -1,1 +1,21 @@
 @import "tailwindcss";
+
+@variant dark (&:is(.dark *));
+
+@theme {
+  /* Brand */
+  --color-primary: #741fde;
+  --color-primary-contrast: #ffffff;
+  --color-primary-tint: #ede9fe;
+  --color-primary-tint-hover: #ddd6fe;
+  --color-primary-tint-border: #c4b5fd;
+  --color-primary-on: #6d28d9;
+  --color-primary-ring: #a78bfa;
+
+  /* Semantic */
+  --color-background: #f5f5f7;
+  --color-surface: #ffffff;
+  --color-border: #e4e4e7;
+  --color-contrast: #0d0d0d;
+  --color-muted: #71717a;
+}
