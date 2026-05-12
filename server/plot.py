@@ -23,7 +23,6 @@ lats = t2m_c["latitude"].values
 lons = t2m_c["longitude"].values
 Z = t2m_c.values
 
-
 fig = plt.figure(figsize=(10, 6))
 ax = plt.axes(projection=ccrs.PlateCarree())
 

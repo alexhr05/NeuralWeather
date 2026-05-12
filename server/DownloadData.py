@@ -19,5 +19,20 @@ request = {
     "area": area
 }
 
+import os
+
+nested_directory = "data/bulgaria"
+
+try:
+    os.makedirs(nested_directory)
+    print(f"Nested directories '{nested_directory}' created successfully.")
+except FileExistsError:
+    print(f"One or more directories in '{nested_directory}' already exist.")
+except PermissionError:
+    print(f"Permission denied: Unable to create '{nested_directory}'.")
+except Exception as e:
+    print(f"An error occurred: {e}")
+
 client = cdsapi.Client()
-client.retrieve(dataset, request).download("data/bulgaria/data.grib")
+client.retrieve(dataset, request).download(f"{nested_directory}/data.grib")
+
