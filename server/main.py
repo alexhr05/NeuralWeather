@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from setup import setup
 from os import listdir
 from os.path import isfile, join
@@ -8,6 +9,16 @@ from utilities import use_data
 
 setup()
 app = FastAPI()
+
+origins = ["http://localhost:5174"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class Coordinate(BaseModel):
     longitude: float
