@@ -33,9 +33,9 @@ def use_data(responseBody):
     
 
     X = df[feature_cols].values
-    predictions = model.predict(X)
-    
-    return predictions
+    predictions = model.predict(X) # returns numpy 2d array
+
+    return predictions.flatten().tolist() # plain list
     
 def minmax_normalize(df, cols):
 
