@@ -10,8 +10,8 @@ setup()
 app = FastAPI()
 
 class Coordinate(BaseModel):
-    long: float
-    lat: float
+    longitude: float
+    latitude: float
 
 class ResponseBody(BaseModel):
     year: int
@@ -29,9 +29,10 @@ def get_models():
     print("test")
     return [f for f in listdir(models_dir) if isfile(join(models_dir, f))]
 
-
+@app.post("/test")
+def test_data(year:int):
+    return year
 
 @app.post("/use")
 def use_model(responseBody: ResponseBody):    
-    
     return use_data(responseBody)
