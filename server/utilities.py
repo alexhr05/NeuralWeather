@@ -30,12 +30,18 @@ def use_data(responseBody):
                     "hour_sin", "hour_cos"]
 
     model = tf.keras.models.load_model("models/model.keras")   
-    
+
+    with open("data/bulgaria/stats.json") as f:
+        stats = json.load(f)
 
     X = df[feature_cols].values
-    predictions = model.predict(X) # returns numpy 2d array
+    predictions = model.predict(X).flatten()
 
-    return predictions.flatten().tolist() # plain list
+    t2m_min = stats["t2m"]["min"]
+    t2m_max = stats["t2m"]["max"]
+    temps_celsius = predictions * (t2m_max - t2m_min) + t2m_min - 273.15
+
+    return temps_celsius.tolist()
     
 def minmax_normalize(df, cols):
 
