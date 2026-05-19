@@ -3,9 +3,11 @@ import { useForm } from 'react-hook-form'
 import * as Yup from "yup"
 import { yupResolver } from '@hookform/resolvers/yup'
 import FormProvider from '../form/FormProvider';
-import { RHFTextField } from '../form/RHFTextField';
+// import { RHFTextField } from '../form/RHFTextField';
 import { RHFDropdown } from '../form/RHFDropdown';
 import { Button } from '../common/Button';
+import { getTemperatures } from '../../services/temperatureService';
+import { getBulgariaCoordinates } from '../../utils/bulgariaCoordinates';
 
 type Props = {
   latitude?: number;
@@ -13,6 +15,7 @@ type Props = {
 }
 
 type FormValues = {
+  hour: string;
   day: string;
   month: string;
   year: string;
@@ -22,6 +25,7 @@ type FormValues = {
 };
 
 const schema = Yup.object({
+  hour: Yup.string().required('Hour is required'),
   day: Yup.string().required('Day is required'),
   month: Yup.string().required('Month is required'),
   year: Yup.string().required('Year is required'),
@@ -34,6 +38,7 @@ export default function MapControlForm({ latitude, longitude }: Props) {
 
   const defaultValues = useMemo(
     () => ({
+      hour: '',
       day: '',
       month: '',
       year: '',
@@ -51,9 +56,24 @@ export default function MapControlForm({ latitude, longitude }: Props) {
 
   const { handleSubmit } = methods;
 
-  const onSubmit = handleSubmit((data) => {
-    console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+    const reqBody = {
+      year: Number(data.year),
+      month: Number(data.month),
+      day: Number(data.day),
+      hour: Number(data.hour),
+      coordinate: getBulgariaCoordinates(),
+      model: 'model.keras'
+    };
+  
+    const res = await getTemperatures(reqBody);
+    console.log(res);
   });
+
+  const hourOptions = Array.from({ length: 24 }, (_, i) => ({
+    value: String(i),
+    label: `${i}:00`,
+  }));
 
   const dayOptions = Array.from({ length: 31 }, (_, i) => ({
     value: String(i + 1),
@@ -85,11 +105,12 @@ export default function MapControlForm({ latitude, longitude }: Props) {
       onSubmit={onSubmit}
       className="flex flex-1 gap-2 w-full"
     >
+      <RHFDropdown fullWidth name="hour" label="Hour" options={hourOptions} />
       <RHFDropdown fullWidth name="day" label="Day" options={dayOptions} />
       <RHFDropdown fullWidth name="month" label="Month" options={monthOptions} />
       <RHFDropdown fullWidth name="year" label="Year" options={yearOptions} />
-      <RHFTextField name='latitude' label='Latitude' fullWidth />
-      <RHFTextField name='longitude' label='Longitude' fullWidth />
+      {/* <RHFTextField name='latitude' label='Latitude' fullWidth />
+      <RHFTextField name='longitude' label='Longitude' fullWidth /> */}
       <RHFDropdown fullWidth name='model' label='Model' options={modelOptions} />
 
       <Button

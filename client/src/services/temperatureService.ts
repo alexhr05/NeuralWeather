@@ -1,9 +1,5 @@
+import type { Coordinate } from '../types/Coordinate';
 import type { CoordTemperature } from '../types/CoordTemperature';
-
-type Coordinate = {
-  lat: number;
-  long: number;
-};
 
 type RequestBody = {
   year: number;
