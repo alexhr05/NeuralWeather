@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'
+import TemperatureOverlay from './TemperatureOverlay';
 
 function ClickHandler({ onCoords }: { onCoords: (lat: number, lng: number) => void }) {
   useMapEvents({
@@ -27,6 +28,7 @@ export default function BulgariaMap() {
           attribution="© OpenStreetMap contributors"
         />
 
+        <TemperatureOverlay />
         <ClickHandler onCoords={(lat, lng) => setCoords({ lat, lng })} />
       </MapContainer>
 
