@@ -2,8 +2,25 @@ from fastapi import FastAPI
 from setup import setup
 from os import listdir
 from os.path import isfile, join
+from pydantic import BaseModel
+from typing import List
+from utilities import use_data
+
 setup()
 app = FastAPI()
+
+class Coordinate(BaseModel):
+    long: float
+    lat: float
+
+class ResponseBody(BaseModel):
+    year: int
+    month: int
+    day: int
+    hour: int
+    coordinate: List[Coordinate]
+    model: str
+
 
 
 @app.get("/models")
@@ -13,6 +30,8 @@ def get_models():
     return [f for f in listdir(models_dir) if isfile(join(models_dir, f))]
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: str | None = None):
-    return {"item_id": item_id, "q": q}
+
+@app.post("/use")
+def use_model(responseBody: ResponseBody):    
+    
+    return use_data(responseBody)
