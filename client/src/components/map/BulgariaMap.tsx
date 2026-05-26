@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css'
 import TemperatureOverlay from './TemperatureOverlay';
+import TemperatureLegend from './TemperatureLegend';
 import { bulgariaCoordinatePoints } from '../../utils/bulgariaCoordinates';
 
 type Props = {
@@ -18,6 +19,9 @@ export default function BulgariaMap({ tempValues }: Props) {
     [tempValues]
   );
 
+  const min = tempValues.length ? Math.min(...tempValues) : 0;
+  const max = tempValues.length ? Math.max(...tempValues) : 0;
+
   return (
     <MapContainer
       center={[42.73, 25.48]}
@@ -31,6 +35,7 @@ export default function BulgariaMap({ tempValues }: Props) {
       />
 
       <TemperatureOverlay temperatureGrid={temperatureGrid} />
+      {tempValues.length > 0 && <TemperatureLegend min={min} max={max} />}
     </MapContainer>
   )
 }
