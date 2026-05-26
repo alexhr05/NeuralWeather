@@ -5,7 +5,7 @@ from os import listdir
 from os.path import isfile, join
 from pydantic import BaseModel
 from typing import List
-from utilities import use_data
+from setup.models.base_model import use_base_model
 
 setup()
 app = FastAPI()
@@ -45,5 +45,14 @@ def test_data(year:int):
     return year
 
 @app.post("/use")
-def use_model(responseBody: ResponseBody):    
-    return use_data(responseBody)
+def use_default_model(responseBody: ResponseBody):    
+    return use_base_model(responseBody)
+
+@app.post("/use/{model}")
+def use_model(model: str,responseBody: ResponseBody): 
+    match model:
+        case "base_model.keras":
+            return use_base_model(responseBody)
+    
+    return use_base_model(responseBody)
+    

@@ -1,57 +1,11 @@
-import pandas as pd
-import tensorflow as tf
 import json
 import numpy as np
-def use_data(responseBody):
-    longs = [coord.longitude for coord in responseBody.coordinate]
-    lats  = [coord.latitude  for coord in responseBody.coordinate]
-    year = responseBody.year
-    month = responseBody.month
-    day = responseBody.day
-    hour = responseBody.hour
 
-    df = pd.DataFrame([coord.dict() for coord in responseBody.coordinate])
-    df["year"] = responseBody.year
-    df["month"] = responseBody.month
-    df["day"] = responseBody.day
-    df["hour"] = responseBody.hour 
-
-    print(df)
-
-    add_cyclical(df, "month", 12)
-    add_cyclical(df, "day", 31)
-    add_cyclical(df, "hour", 24)
-
-    df = minmax_normalize(df, ["latitude", "longitude", "year"])
-
-    feature_cols = ["latitude", "longitude", "year",
-                    "month_sin", "month_cos",
-                    "day_sin", "day_cos",
-                    "hour_sin", "hour_cos"]
-
-    model = tf.keras.models.load_model("models/model.keras")   
-
-    with open("data/bulgaria/stats.json") as f:
-        stats = json.load(f)
-
-    X = df[feature_cols].values
-    predictions = model.predict(X).flatten()
-
-    t2m_min = stats["t2m"]["min"]
-    t2m_max = stats["t2m"]["max"]
-    temps_celsius = predictions * (t2m_max - t2m_min) + t2m_min - 273.15
-
-    return temps_celsius.tolist()
-    
 def minmax_normalize(df, cols):
-
-
     stats_file = "data/bulgaria/stats.json"
 
     with open(stats_file) as f:
         stats = json.load(f)
-
-
 
     for col in cols:
         col_min = stats[col]["min"]
@@ -61,8 +15,6 @@ def minmax_normalize(df, cols):
     
     
     return df
-
-
 
 def add_cyclical(df, col, period):
         df[f"{col}_sin"] = np.sin(2 * np.pi * df[col] / period)
