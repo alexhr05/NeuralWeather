@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form'
 import * as Yup from "yup"
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -8,10 +8,12 @@ import { RHFDropdown } from '../form/RHFDropdown';
 import { Button } from '../common/Button';
 import { getTemperatures } from '../../services/temperatureService';
 import { getBulgariaCoordinates } from '../../utils/bulgariaCoordinates';
+import { getModels } from '../../services/modelService';
 
 type Props = {
   latitude?: number;
   longitude?: number;
+  onChangeTempValues: (value: number[]) => void
 }
 
 type FormValues = {
@@ -34,7 +36,17 @@ const schema = Yup.object({
   model: Yup.string().required('Model is required')
 });
 
-export default function MapControlForm({ latitude, longitude }: Props) {
+export default function MapControlForm({ latitude, longitude, onChangeTempValues }: Props) {
+  const [modelOptions, setModelOptions] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchModels = async () => {
+      const res = await getModels();
+      setModelOptions(res);
+    }
+
+    fetchModels();
+  }, [])
 
   const defaultValues = useMemo(
     () => ({
@@ -63,11 +75,15 @@ export default function MapControlForm({ latitude, longitude }: Props) {
       day: Number(data.day),
       hour: Number(data.hour),
       coordinate: getBulgariaCoordinates(),
-      model: 'model.keras'
+      model: data.model
     };
-  
-    const res = await getTemperatures(reqBody);
-    console.log(res);
+    
+    try {
+      const res = await getTemperatures(reqBody);
+      onChangeTempValues(res);
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   const hourOptions = Array.from({ length: 24 }, (_, i) => ({
@@ -92,11 +108,6 @@ export default function MapControlForm({ latitude, longitude }: Props) {
   const yearOptions = Array.from({ length: currentYear - 1979 }, (_, i) => ({
     value: String(currentYear - i),
     label: String(currentYear - i),
-  }));
-
-  const modelOptions = ['Model 1', 'Model 2', 'Model 3'].map((m, i) => ({
-    value: String(i + 1),
-    label: m
   }));
 
   return (
