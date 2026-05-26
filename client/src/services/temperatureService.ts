@@ -1,5 +1,4 @@
 import type { Coordinate } from '../types/Coordinate';
-import type { CoordTemperature } from '../types/CoordTemperature';
 
 type RequestBody = {
   year: number;
@@ -12,7 +11,7 @@ type RequestBody = {
 
 const API_URL = 'http://127.0.0.1:8000';
 
-export async function getTemperatures(data: RequestBody): Promise<CoordTemperature[]> {
+export async function getTemperatures(data: RequestBody): Promise<number[]> {
   const res = await fetch(`${API_URL}/use`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

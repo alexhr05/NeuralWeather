@@ -12,6 +12,7 @@ import { getBulgariaCoordinates } from '../../utils/bulgariaCoordinates';
 type Props = {
   latitude?: number;
   longitude?: number;
+  onChangeTempValues: (value: number[]) => void
 }
 
 type FormValues = {
@@ -34,7 +35,7 @@ const schema = Yup.object({
   model: Yup.string().required('Model is required')
 });
 
-export default function MapControlForm({ latitude, longitude }: Props) {
+export default function MapControlForm({ latitude, longitude, onChangeTempValues }: Props) {
 
   const defaultValues = useMemo(
     () => ({
@@ -65,9 +66,13 @@ export default function MapControlForm({ latitude, longitude }: Props) {
       coordinate: getBulgariaCoordinates(),
       model: 'model.keras'
     };
-  
-    const res = await getTemperatures(reqBody);
-    console.log(res);
+    
+    try {
+      const res = await getTemperatures(reqBody);
+      onChangeTempValues(res);
+    } catch (error) {
+      console.error(error);
+    }
   });
 
   const hourOptions = Array.from({ length: 24 }, (_, i) => ({

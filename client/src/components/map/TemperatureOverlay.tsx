@@ -4,7 +4,6 @@ import * as d3 from 'd3';
 import * as topojson from 'topojson-client';
 import type { Topology } from 'topojson-specification';
 import worldData from 'world-atlas/countries-10m.json';
-import { mockTemperatureGrid } from '../../mocks/temperatureGrid';
 
 const world = worldData as unknown as Topology;
 const countries = topojson.feature(
@@ -13,11 +12,19 @@ const countries = topojson.feature(
 ) as unknown as GeoJSON.FeatureCollection;
 const bulgariaFeature = countries.features.find(f => f.id === '100')!;
 
-export default function TemperatureOverlay() {
+type Props = {
+  temperatureGrid: {
+    lats: number[];
+    lons: number[];
+    values: number[];
+  }
+};
+
+export default function TemperatureOverlay({ temperatureGrid }: Props) {
   const map = useMap();
 
   useEffect(() => {
-    const { lats, lons, values } = mockTemperatureGrid;
+    const { lats, lons, values } = temperatureGrid;
     const rows = lats.length;
     const cols = lons.length;
 
@@ -99,7 +106,7 @@ export default function TemperatureOverlay() {
       map.off('viewreset zoomend moveend', reset);
       svg.remove();
     };
-  }, [map]);
+  }, [map, temperatureGrid]);
 
   return null;
 }
