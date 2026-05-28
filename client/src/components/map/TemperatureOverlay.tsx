@@ -36,8 +36,9 @@ export default function TemperatureOverlay({ temperatureGrid }: Props) {
     const min = Math.min(...flat);
     const max = Math.max(...flat);
 
-    // 20 filled contour bands — mirrors matplotlib contourf(levels=20)
-    const thresholds = d3.range(min, max, (max - min) / 20);
+    const step = (max - min) / 20;
+    // Start slightly below min so the first band covers cells at exactly the minimum value
+    const thresholds = d3.range(min - step * 0.01, max, step);
     const contours = d3.contours().size([cols, rows]).thresholds(thresholds)(flat);
 
     const svg = d3
@@ -90,9 +91,22 @@ export default function TemperatureOverlay({ temperatureGrid }: Props) {
 
       clipPathEl.attr('d', d3.geoPath().projection(geoProj)(bulgariaFeature));
 
-      g.selectAll<SVGPathElement, (typeof contours)[number]>('path')
+      // Full-viewport rect clipped to Bulgaria — covers any gaps the contour bands leave
+      g.selectAll<SVGRectElement, [null]>('.bg')
+        .data([null] as [null])
+        .join('rect')
+        .attr('class', 'bg')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', br.x - tl.x)
+        .attr('height', br.y - tl.y)
+        .attr('fill', d3.interpolateRdBu(1))
+        .attr('opacity', 0.75);
+
+      g.selectAll<SVGPathElement, (typeof contours)[number]>('.contour')
         .data(contours)
         .join('path')
+        .attr('class', 'contour')
         .attr('d', d3.geoPath().projection(contourProj))
         .attr('fill', d => d3.interpolateRdBu(1 - (d.value - min) / (max - min)))
         .attr('stroke', 'none')
