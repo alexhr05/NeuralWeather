@@ -5,11 +5,14 @@ from pathlib import Path
 from sklearn.model_selection import train_test_split
 from .util import FEATURE_COLS
 
-def build_model(n_features: int, layers: list[int]) -> tf.keras.Model:
+def build_model(n_features: int, layers: list[int], non_negative: bool) -> tf.keras.Model:
+    final_activation = "linear"
+    if non_negative:
+        final_activation = "relu"
     model = tf.keras.Sequential([
         tf.keras.layers.Input(shape=(n_features,)),
         *[tf.keras.layers.Dense(size, activation="relu") for size in layers],
-        tf.keras.layers.Dense(1),
+        tf.keras.layers.Dense(1, activation=final_activation),
     ])
     model.compile(optimizer="adam", loss="mse", metrics=["mae"])
     return model
@@ -24,6 +27,7 @@ def train_model(
     test_size: float = 0.05,
     epochs: int = 20,
     batch_size: int = 1024,
+    non_negative: bool = False,
     extra_norm_cols: list[str] | None = None,
 ) -> None:
     model_file = f"models/{name}.keras"
@@ -45,7 +49,7 @@ def train_model(
     )
 
     print(f"[{name}] Training on {len(X_train)} samples...")
-    model = build_model(n_features=X.shape[1], layers=layers)
+    model = build_model(n_features=X.shape[1], layers=layers, non_negative=non_negative)
     model.fit(
         X_train, y_train,
         validation_split=0.1,

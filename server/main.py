@@ -97,4 +97,3 @@ def use_model_by_name(model: str, responseBody: ResponseBody):
         )
     except FileNotFoundError:
         raise HTTPException(status_code=404, detail=f"Model '{model}' not found.")
-    

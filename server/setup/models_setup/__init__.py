@@ -23,6 +23,7 @@ def setup_models():
         parquet_file="data/bulgaria/bulgaria_surface_solar_radiation_downwards.parquet",
         stats_file="data/bulgaria/bulgaria_surface_solar_radiation_downwards_stats.json",
         target="ssrd",
+        non_negative=True,
         layers=[32, 32, 32],
     )
     print("model setup")
