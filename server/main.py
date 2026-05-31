@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing import List
 from setup.models_setup.base_model import use_base_model
 
-setup()
+# setup()
 app = FastAPI()
 
 origins = ["http://localhost:5174"]
