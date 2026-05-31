@@ -1,5 +1,5 @@
 import os
-from .data import download_data_bulgaria, download_data_europe
+from .data_setup import download_data_region
 from .models_setup import setup_models
 
 
@@ -8,6 +8,7 @@ def setup():
     setup_models()
 
 def setup_data():
-    download_data_europe()
-    download_data_bulgaria()
+    download_data_region("bulgaria")
+    download_data_region("bulgaria", variables=["surface_solar_radiation_downwards"])
+    # download_data_region("europe")
     
