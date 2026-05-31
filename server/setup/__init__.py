@@ -1,6 +1,6 @@
 import os
 from .data import download_data_bulgaria, download_data_europe
-from .models import setup_models
+from .models_setup import setup_models
 
 
 def setup():

@@ -5,7 +5,7 @@ from os import listdir
 from os.path import isfile, join
 from pydantic import BaseModel
 from typing import List
-from setup.models.base_model import use_base_model
+from setup.models_setup.base_model import use_base_model
 
 setup()
 app = FastAPI()
