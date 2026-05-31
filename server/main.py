@@ -9,10 +9,10 @@ from typing import List
 from setup.models_setup.use_model import use_model
 # from server.setup.models_setup.train_model import use_base_model
 
-setup()
+# setup()
 app = FastAPI()
 
-origins = ["http://localhost:5173"]
+origins = ["http://localhost:5173", "http://localhost:5174"]
 
 app.add_middleware(
     CORSMiddleware,
