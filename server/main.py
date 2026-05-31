@@ -77,10 +77,9 @@ def use_default_model(responseBody: ResponseBody):
 def use_model_by_name(model: str, responseBody: ResponseBody):
     name = model.removesuffix(".keras")
 
-    if name not in MODEL_REGISTRY:
-        raise HTTPException(status_code=404, detail=f"Model '{model}' not found.")
-
-    entry = MODEL_REGISTRY[name]
+    entry = MODEL_REGISTRY.get(name)
+    if entry is None:
+        raise HTTPException(status_code=404, detail=f"Model '{name}' not found. Available: {list(MODEL_REGISTRY.keys())}")
 
     df = pd.DataFrame([coord.dict() for coord in responseBody.coordinate])
     df["year"]  = responseBody.year
