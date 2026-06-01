@@ -14,6 +14,7 @@ type Props = {
   latitude?: number;
   longitude?: number;
   onChangeTempValues: (value: number[]) => void;
+  onChangeModel: (newModel: string) => void;
 };
 
 type FormValues = {
@@ -40,6 +41,7 @@ export default function MapControlForm({
   latitude,
   longitude,
   onChangeTempValues,
+  onChangeModel,
 }: Props) {
   const [modelOptions, setModelOptions] = useState<string[]>([]);
 
@@ -85,6 +87,7 @@ export default function MapControlForm({
     try {
       const res = await getTemperatures(reqBody);
       onChangeTempValues(res);
+      onChangeModel(data.model);
     } catch (error) {
       console.error(error);
     }

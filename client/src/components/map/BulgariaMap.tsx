@@ -6,10 +6,11 @@ import TemperatureLegend from './TemperatureLegend';
 import { bulgariaCoordinatePoints } from '../../utils/bulgariaCoordinates';
 
 type Props = {
-  tempValues: number[]
+  tempValues: number[];
+  currentModel: string;
 };
 
-export default function BulgariaMap({ tempValues }: Props) {
+export default function BulgariaMap({ tempValues, currentModel }: Props) {
   const temperatureGrid = useMemo(
     () => ({
       lats: bulgariaCoordinatePoints.lats,
@@ -19,8 +20,8 @@ export default function BulgariaMap({ tempValues }: Props) {
     [tempValues]
   );
 
-  const min = tempValues.length ? Math.min(...tempValues) : 0;
-  const max = tempValues.length ? Math.max(...tempValues) : 0;
+  // const min = tempValues.length ? Math.min(...tempValues) : 0;
+  // const max = tempValues.length ? Math.max(...tempValues) : 0;
 
   return (
     <MapContainer
@@ -35,7 +36,7 @@ export default function BulgariaMap({ tempValues }: Props) {
       />
 
       <TemperatureOverlay temperatureGrid={temperatureGrid} />
-      {tempValues.length > 0 && <TemperatureLegend min={min} max={max} />}
+      {tempValues.length > 0 && <TemperatureLegend model={currentModel} />}
     </MapContainer>
   )
 }

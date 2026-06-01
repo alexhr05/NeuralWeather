@@ -4,14 +4,21 @@ import * as L from 'leaflet';
 import * as d3 from 'd3';
 
 type Props = {
-  min: number;
-  max: number;
+  model: string;
 };
 
-export default function TemperatureLegend({ min, max }: Props) {
+const legendConfig: Record<string, { title: string; unit: string; min: number; max: number }> = {
+  'base_model.keras':  { title: 'Temperature (°C)',       unit: '°',     min: -30, max: 50        },
+  'solar_model.keras': { title: 'Solar Radiation (J/m²)', unit: ' J/m²', min: 0,   max: 3_645_696 },
+};
+
+export default function TemperatureLegend({ model }: Props) {
   const map = useMap();
 
   useEffect(() => {
+    const config = legendConfig[model] ?? { title: model, unit: '', min: 0, max: 1 };
+    const { min, max } = config;
+
     const legend = new L.Control({ position: 'bottomright' });
 
     legend.onAdd = () => {
@@ -27,7 +34,6 @@ export default function TemperatureLegend({ min, max }: Props) {
       `;
 
       const steps = 5;
-      // i=0 → top (max/hot/red), i=steps → bottom (min/cold/blue)
       const labels = d3.range(steps + 1).map(i => {
         const t = i / steps;
         return {
@@ -41,11 +47,11 @@ export default function TemperatureLegend({ min, max }: Props) {
         .join(', ');
 
       div.innerHTML = `
-        <div style="font-weight:600; margin-bottom:6px; color:#333;">Temperature (°C)</div>
+        <div style="font-weight:600; margin-bottom:6px; color:#333;">${config.title}</div>
         <div style="display:flex; align-items:stretch; gap:6px;">
           <div style="width:18px; background:linear-gradient(to bottom, ${gradientStops}); border-radius:3px; min-height:110px;"></div>
           <div style="display:flex; flex-direction:column; justify-content:space-between;">
-            ${labels.map(l => `<span style="color:#333;">${l.value.toFixed(1)}°</span>`).join('')}
+            ${labels.map(l => `<span style="color:#333;">${l.value.toFixed(1)}${config.unit}</span>`).join('')}
           </div>
         </div>
       `;
@@ -55,7 +61,7 @@ export default function TemperatureLegend({ min, max }: Props) {
 
     legend.addTo(map);
     return () => { legend.remove(); };
-  }, [map, min, max]);
+  }, [map, model]);
 
   return null;
 }
