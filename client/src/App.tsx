@@ -5,7 +5,7 @@ import MapControlForm from "./components/map/MapControlForm"
 function App() {
   const [tempValues, setTempValues] = useState<number[]>([]);
 
-  const [currentModel, setCurrentModel] = useState<string | null>(null);
+  const [currentModel, setCurrentModel] = useState<string>('');
 
   const handleChangeTempValues = (value: number[]) => {
     setTempValues(value);
