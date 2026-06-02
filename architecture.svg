@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1060" height="672" viewBox="0 0 1060 672" xmlns="http://www.w3.org/2000/svg"
+     font-family="'Segoe UI', Arial, sans-serif">
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#94A3B8"/>
+    </marker>
+    <marker id="ad" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0,10 3.5,0 7" fill="#CBD5E1"/>
+    </marker>
+  </defs>
+
+  <!-- ─── BACKGROUND ─── -->
+  <rect width="1060" height="672" fill="#F8FAFC" rx="14"/>
+
+  <!-- ─── TITLE ─── -->
+  <text x="530" y="36" text-anchor="middle" font-size="20" font-weight="700" fill="#0F172A">
+    NeuralWeather — Архитектура
+  </text>
+
+  <!-- ══════════════════════════ SECTION 1 · DATA PIPELINE ══════════════════════════ -->
+  <rect x="22" y="50" width="1016" height="162" rx="10" fill="#FFF7ED" stroke="#FB923C" stroke-width="2"/>
+  <rect x="22" y="50" width="220" height="22" rx="5" fill="#FB923C"/>
+  <text x="36" y="66" font-size="10.5" font-weight="700" fill="white" letter-spacing="0.6">OFFLINE DATA PIPELINE</text>
+
+  <!-- ERA5 -->
+  <rect x="38"  y="82" width="138" height="118" rx="7" fill="white" stroke="#FDBA74" stroke-width="1.5"/>
+  <rect x="38"  y="82" width="138" height="25"  rx="5" fill="#FED7AA"/>
+  <text x="107" y="99"  text-anchor="middle" font-size="11.5" font-weight="700" fill="#7C2D12">ERA5 API</text>
+  <text x="107" y="121" text-anchor="middle" font-size="10"   fill="#78716C">Copernicus</text>
+  <text x="107" y="136" text-anchor="middle" font-size="10"   fill="#78716C">GRIB данни</text>
+  <text x="107" y="151" text-anchor="middle" font-size="10"   fill="#78716C">t2m · ssrd</text>
+  <text x="107" y="166" text-anchor="middle" font-size="10"   fill="#78716C">1940 – 2025</text>
+  <text x="107" y="181" text-anchor="middle" font-size="10"   fill="#78716C">0.25° решетка</text>
+
+  <line x1="176" y1="141" x2="206" y2="141" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- formatter.py -->
+  <rect x="206" y="82" width="162" height="118" rx="7" fill="white" stroke="#FDBA74" stroke-width="1.5"/>
+  <rect x="206" y="82" width="162" height="25"  rx="5" fill="#FED7AA"/>
+  <text x="287" y="99"  text-anchor="middle" font-size="11.5" font-weight="700" fill="#7C2D12">formatter.py</text>
+  <text x="287" y="121" text-anchor="middle" font-size="10"   fill="#78716C">minmax нормализация</text>
+  <text x="287" y="136" text-anchor="middle" font-size="10"   fill="#78716C">sin/cos кодиране</text>
+  <text x="287" y="151" text-anchor="middle" font-size="10"   fill="#78716C">(час, ден, месец)</text>
+  <text x="287" y="166" text-anchor="middle" font-size="10"   fill="#78716C">→ .parquet</text>
+  <text x="287" y="181" text-anchor="middle" font-size="10"   fill="#78716C">→ stats.json</text>
+
+  <line x1="368" y1="141" x2="398" y2="141" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- train_model.py -->
+  <rect x="398" y="82" width="170" height="118" rx="7" fill="white" stroke="#FDBA74" stroke-width="1.5"/>
+  <rect x="398" y="82" width="170" height="25"  rx="5" fill="#FED7AA"/>
+  <text x="483" y="99"  text-anchor="middle" font-size="11.5" font-weight="700" fill="#7C2D12">train_model.py</text>
+  <text x="483" y="121" text-anchor="middle" font-size="10"   fill="#78716C">Dense NN (TensorFlow)</text>
+  <text x="483" y="136" text-anchor="middle" font-size="10"   fill="#78716C">layers: [32, 32, 32]</text>
+  <text x="483" y="151" text-anchor="middle" font-size="10"   fill="#78716C">optimizer: Adam</text>
+  <text x="483" y="166" text-anchor="middle" font-size="10"   fill="#78716C">loss: MSE</text>
+  <text x="483" y="181" text-anchor="middle" font-size="10"   fill="#78716C">EarlyStopping</text>
+
+  <line x1="568" y1="141" x2="598" y2="141" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- Models (stacked) -->
+  <rect x="598" y="82"  width="428" height="56" rx="7" fill="white" stroke="#FDBA74" stroke-width="1.5"/>
+  <rect x="598" y="82"  width="428" height="25" rx="5" fill="#FED7AA"/>
+  <text x="812" y="99"  text-anchor="middle" font-size="11.5" font-weight="700" fill="#7C2D12">base_model.keras</text>
+  <text x="812" y="124" text-anchor="middle" font-size="10"   fill="#78716C">target: t2m (2m температура) → °C</text>
+
+  <rect x="598" y="146" width="428" height="56" rx="7" fill="white" stroke="#FDBA74" stroke-width="1.5"/>
+  <rect x="598" y="146" width="428" height="25" rx="5" fill="#FED7AA"/>
+  <text x="812" y="163" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7C2D12">solar_model.keras</text>
+  <text x="812" y="188" text-anchor="middle" font-size="10"   fill="#78716C">target: ssrd (слънчева радиация) → J/m²</text>
+
+  <!-- ─── Arrow: Pipeline → Backend ─── -->
+  <line x1="812" y1="212" x2="812" y2="250" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ad)"/>
+  <text x="822" y="235" font-size="9" fill="#94A3B8" font-style="italic">models/*.keras</text>
+
+  <!-- ══════════════════════════ SECTION 2 · BACKEND ══════════════════════════ -->
+  <rect x="22" y="252" width="1016" height="148" rx="10" fill="#F5F3FF" stroke="#7C3AED" stroke-width="2"/>
+  <rect x="22" y="252" width="170" height="22"  rx="5" fill="#7C3AED"/>
+  <text x="36" y="268" font-size="10.5" font-weight="700" fill="white" letter-spacing="0.6">FASTAPI BACKEND</text>
+
+  <!-- MODEL_REGISTRY -->
+  <rect x="38"  y="280" width="190" height="108" rx="7" fill="white" stroke="#DDD6FE" stroke-width="1.5"/>
+  <rect x="38"  y="280" width="190" height="25"  rx="5" fill="#EDE9FE"/>
+  <text x="133" y="297" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4C1D95">MODEL_REGISTRY</text>
+  <text x="133" y="320" text-anchor="middle" font-size="10"   fill="#78716C">base_model → t2m</text>
+  <text x="133" y="336" text-anchor="middle" font-size="10"   fill="#78716C">solar_model → ssrd</text>
+  <text x="133" y="352" text-anchor="middle" font-size="10"   fill="#78716C">stats_file · target</text>
+  <text x="133" y="368" text-anchor="middle" font-size="10"   fill="#78716C">конфигурация</text>
+
+  <!-- GET /models -->
+  <rect x="248" y="280" width="160" height="108" rx="7" fill="white" stroke="#DDD6FE" stroke-width="1.5"/>
+  <rect x="248" y="280" width="160" height="25"  rx="5" fill="#EDE9FE"/>
+  <text x="328" y="297" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4C1D95">GET /models</text>
+  <text x="328" y="320" text-anchor="middle" font-size="10"   fill="#78716C">listdir("models/")</text>
+  <text x="328" y="336" text-anchor="middle" font-size="10"   fill="#78716C">→ string[ ]</text>
+
+  <!-- POST /use/{model} -->
+  <rect x="428" y="280" width="200" height="108" rx="7" fill="white" stroke="#DDD6FE" stroke-width="1.5"/>
+  <rect x="428" y="280" width="200" height="25"  rx="5" fill="#EDE9FE"/>
+  <text x="528" y="297" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4C1D95">POST /use/{model}</text>
+  <text x="528" y="320" text-anchor="middle" font-size="10"   fill="#78716C">lookup в registry</text>
+  <text x="528" y="336" text-anchor="middle" font-size="10"   fill="#78716C">351 координати</text>
+  <text x="528" y="352" text-anchor="middle" font-size="10"   fill="#78716C">year · month · day · hour</text>
+
+  <line x1="628" y1="334" x2="648" y2="334" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- use_model.py -->
+  <rect x="648" y="280" width="372" height="108" rx="7" fill="white" stroke="#DDD6FE" stroke-width="1.5"/>
+  <rect x="648" y="280" width="372" height="25"  rx="5" fill="#EDE9FE"/>
+  <text x="834" y="297" text-anchor="middle" font-size="11.5" font-weight="700" fill="#4C1D95">use_model.py</text>
+  <text x="834" y="320" text-anchor="middle" font-size="10"   fill="#78716C">нормализира входа (lat, lon, year, sin/cos)</text>
+  <text x="834" y="336" text-anchor="middle" font-size="10"   fill="#78716C">load_model("models/{name}.keras")</text>
+  <text x="834" y="352" text-anchor="middle" font-size="10"   fill="#78716C">model.predict(X) → денормализира</text>
+  <text x="834" y="368" text-anchor="middle" font-size="10"   fill="#78716C">→ list[float]  (°C или J/m²)</text>
+
+  <!-- ─── Arrows: Backend → Frontend ─── -->
+  <line x1="328" y1="388" x2="328" y2="438" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ad)"/>
+  <text x="338" y="417" font-size="9" fill="#94A3B8" font-style="italic">model names</text>
+
+  <line x1="528" y1="388" x2="528" y2="438" stroke="#CBD5E1" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ad)"/>
+  <text x="538" y="417" font-size="9" fill="#94A3B8" font-style="italic">number[351]</text>
+
+  <!-- ══════════════════════════ SECTION 3 · FRONTEND ══════════════════════════ -->
+  <rect x="22" y="440" width="1016" height="218" rx="10" fill="#EFF6FF" stroke="#1D4ED8" stroke-width="2"/>
+  <rect x="22" y="440" width="170" height="22"  rx="5" fill="#1D4ED8"/>
+  <text x="36" y="456" font-size="10.5" font-weight="700" fill="white" letter-spacing="0.6">REACT FRONTEND</text>
+
+  <!-- MapControlForm -->
+  <rect x="38"  y="466" width="188" height="178" rx="7" fill="white" stroke="#BFDBFE" stroke-width="1.5"/>
+  <rect x="38"  y="466" width="188" height="25"  rx="5" fill="#DBEAFE"/>
+  <text x="132" y="483" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E3A8A">MapControlForm</text>
+  <text x="132" y="507" text-anchor="middle" font-size="10"   fill="#78716C">час / ден / месец / година</text>
+  <text x="132" y="522" text-anchor="middle" font-size="10"   fill="#78716C">избор на модел</text>
+  <text x="132" y="537" text-anchor="middle" font-size="10"   fill="#78716C">react-hook-form + Yup</text>
+  <text x="132" y="556" text-anchor="middle" font-size="9.5"  fill="#94A3B8">──────────────────</text>
+  <text x="132" y="572" text-anchor="middle" font-size="10"   fill="#78716C">→ GET /models</text>
+  <text x="132" y="587" text-anchor="middle" font-size="10"   fill="#78716C">→ POST /use/{model}</text>
+  <text x="132" y="609" text-anchor="middle" font-size="9"    fill="#94A3B8" font-style="italic">решетка: 13 × 27 = 351 т.</text>
+  <text x="132" y="623" text-anchor="middle" font-size="9"    fill="#94A3B8" font-style="italic">0.25° стъпка, 41°–44°N</text>
+
+  <line x1="226" y1="555" x2="256" y2="555" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- App.tsx -->
+  <rect x="256" y="466" width="148" height="118" rx="7" fill="white" stroke="#BFDBFE" stroke-width="1.5"/>
+  <rect x="256" y="466" width="148" height="25"  rx="5" fill="#DBEAFE"/>
+  <text x="330" y="483" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E3A8A">App.tsx</text>
+  <text x="330" y="507" text-anchor="middle" font-size="10"   fill="#78716C">state: tempValues[ ]</text>
+  <text x="330" y="522" text-anchor="middle" font-size="10"   fill="#78716C">state: currentModel</text>
+  <text x="330" y="537" text-anchor="middle" font-size="10"   fill="#78716C">props → дъщерни</text>
+  <text x="330" y="552" text-anchor="middle" font-size="10"   fill="#78716C">компоненти</text>
+  <text x="330" y="567" text-anchor="middle" font-size="10"   fill="#78716C">callbacks нагоре</text>
+
+  <line x1="404" y1="525" x2="424" y2="525" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#a)"/>
+
+  <!-- BulgariaMap group (dashed border) -->
+  <rect x="424" y="456" width="600" height="192" rx="9" fill="none" stroke="#93C5FD" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <rect x="424" y="456" width="108" height="18"  rx="4" fill="#DBEAFE"/>
+  <text x="432" y="469" font-size="10" font-weight="700" fill="#1D4ED8">BulgariaMap</text>
+
+  <!-- MapContainer -->
+  <rect x="436" y="476" width="172" height="158" rx="7" fill="white" stroke="#BFDBFE" stroke-width="1.5"/>
+  <rect x="436" y="476" width="172" height="25"  rx="5" fill="#DBEAFE"/>
+  <text x="522" y="493" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E3A8A">MapContainer</text>
+  <text x="522" y="517" text-anchor="middle" font-size="10"   fill="#78716C">react-leaflet</text>
+  <text x="522" y="532" text-anchor="middle" font-size="10"   fill="#78716C">center: [42.73, 25.48]</text>
+  <text x="522" y="547" text-anchor="middle" font-size="10"   fill="#78716C">zoom: 8</text>
+  <text x="522" y="562" text-anchor="middle" font-size="10"   fill="#78716C">TileLayer (OSM)</text>
+  <text x="522" y="577" text-anchor="middle" font-size="10"   fill="#78716C">clip: България</text>
+  <text x="522" y="592" text-anchor="middle" font-size="10"   fill="#78716C">(TopoJSON 10m)</text>
+  <text x="522" y="612" text-anchor="middle" font-size="10"   fill="#78716C">ScaleControl</text>
+
+  <!-- Arrows: MapContainer → TemperatureOverlay & TemperatureLegend -->
+  <!-- branch line -->
+  <line x1="522" y1="634" x2="522" y2="642" stroke="#94A3B8" stroke-width="1.3"/>
+  <line x1="522" y1="642" x2="870" y2="642" stroke="#94A3B8" stroke-width="1.3"/>
+  <line x1="650" y1="642" x2="650" y2="648" stroke="#94A3B8" stroke-width="1.3" marker-end="url(#a)"/>
+  <line x1="870" y1="642" x2="870" y2="648" stroke="#94A3B8" stroke-width="1.3" marker-end="url(#a)"/>
+
+  <!-- TemperatureOverlay -->
+  <rect x="622" y="476" width="222" height="158" rx="7" fill="white" stroke="#BFDBFE" stroke-width="1.5"/>
+  <rect x="622" y="476" width="222" height="25"  rx="5" fill="#DBEAFE"/>
+  <text x="733" y="493" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E3A8A">TemperatureOverlay</text>
+  <text x="733" y="517" text-anchor="middle" font-size="10"   fill="#78716C">D3 contours (20 ленти)</text>
+  <text x="733" y="532" text-anchor="middle" font-size="10"   fill="#78716C">interpolateRdBu</text>
+  <text x="733" y="547" text-anchor="middle" font-size="10"   fill="#78716C">contourProj ↔ geoProj</text>
+  <text x="733" y="562" text-anchor="middle" font-size="10"   fill="#78716C">SVG overlay pane</text>
+  <text x="733" y="577" text-anchor="middle" font-size="10"   fill="#78716C">фонов rect (без дупки)</text>
+  <text x="733" y="592" text-anchor="middle" font-size="10"   fill="#78716C">обновява се на</text>
+  <text x="733" y="607" text-anchor="middle" font-size="10"   fill="#78716C">zoom / pan</text>
+
+  <!-- TemperatureLegend -->
+  <rect x="860" y="476" width="172" height="158" rx="7" fill="white" stroke="#BFDBFE" stroke-width="1.5"/>
+  <rect x="860" y="476" width="172" height="25"  rx="5" fill="#DBEAFE"/>
+  <text x="946" y="493" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1E3A8A">TemperatureLegend</text>
+  <text x="946" y="517" text-anchor="middle" font-size="10"   fill="#78716C">Leaflet Control</text>
+  <text x="946" y="532" text-anchor="middle" font-size="10"   fill="#78716C">bottomright</text>
+  <text x="946" y="547" text-anchor="middle" font-size="10"   fill="#78716C">base_model:</text>
+  <text x="946" y="562" text-anchor="middle" font-size="10"   fill="#78716C">−30°C … 50°C</text>
+  <text x="946" y="577" text-anchor="middle" font-size="10"   fill="#78716C">solar_model:</text>
+  <text x="946" y="592" text-anchor="middle" font-size="10"   fill="#78716C">0 … 3 645 696 J/m²</text>
+
+</svg>
