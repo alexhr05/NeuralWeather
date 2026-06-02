@@ -20,8 +20,8 @@ export default function BulgariaMap({ tempValues, currentModel }: Props) {
     [tempValues]
   );
 
-  // const min = tempValues.length ? Math.min(...tempValues) : 0;
-  // const max = tempValues.length ? Math.max(...tempValues) : 0;
+  const dataMin = tempValues.length ? Math.min(...tempValues) : undefined;
+  const dataMax = tempValues.length ? Math.max(...tempValues) : undefined;
 
   return (
     <MapContainer
@@ -36,7 +36,7 @@ export default function BulgariaMap({ tempValues, currentModel }: Props) {
       />
 
       <TemperatureOverlay temperatureGrid={temperatureGrid} />
-      {tempValues.length > 0 && <TemperatureLegend model={currentModel} />}
+      {tempValues.length > 0 && <TemperatureLegend model={currentModel} dataMin={dataMin} dataMax={dataMax} />}
     </MapContainer>
   )
 }

@@ -5,6 +5,8 @@ import * as d3 from 'd3';
 
 type Props = {
   model: string;
+  dataMin?: number;
+  dataMax?: number;
 };
 
 const legendConfig: Record<string, { title: string; unit: string; min: number; max: number }> = {
@@ -12,7 +14,7 @@ const legendConfig: Record<string, { title: string; unit: string; min: number; m
   'solar_model.keras': { title: 'Solar Radiation (J/m²)', unit: ' J/m²', min: 0,   max: 3_645_696 },
 };
 
-export default function TemperatureLegend({ model }: Props) {
+export default function TemperatureLegend({ model, dataMin, dataMax }: Props) {
   const map = useMap();
 
   useEffect(() => {
@@ -46,6 +48,13 @@ export default function TemperatureLegend({ model }: Props) {
         .map((l, i) => `${l.color} ${(i / steps) * 100}%`)
         .join(', ');
 
+      const minMaxRow = (dataMin !== undefined && dataMax !== undefined)
+        ? `<div style="margin-top:6px; font-size:13px; color:#555; border-top:1px solid #ddd; padding-top:4px;">
+            <div>Min: <b>${dataMin.toFixed(1)}${config.unit}</b></div>
+            <div>Max: <b>${dataMax.toFixed(1)}${config.unit}</b></div>
+          </div>`
+        : '';
+
       div.innerHTML = `
         <div style="font-weight:600; margin-bottom:6px; color:#333;">${config.title}</div>
         <div style="display:flex; align-items:stretch; gap:6px;">
@@ -54,6 +63,7 @@ export default function TemperatureLegend({ model }: Props) {
             ${labels.map(l => `<span style="color:#333;">${l.value.toFixed(1)}${config.unit}</span>`).join('')}
           </div>
         </div>
+        ${minMaxRow}
       `;
 
       return div;
@@ -61,7 +71,7 @@ export default function TemperatureLegend({ model }: Props) {
 
     legend.addTo(map);
     return () => { legend.remove(); };
-  }, [map, model]);
+  }, [map, model, dataMin, dataMax]);
 
   return null;
 }

@@ -121,7 +121,7 @@ export default function MapControlForm({
     label: name,
   }));
 
-  const currentYear = new Date().getFullYear();
+  const currentYear = 2050 // new Date().getFullYear();
   const yearOptions = Array.from({ length: currentYear - 1979 }, (_, i) => ({
     value: String(currentYear - i),
     label: String(currentYear - i),
